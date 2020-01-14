@@ -23,6 +23,7 @@ MongoClient.connect(cfg.url, (err, database) => {
   const db = database.db(cfg.dbName);
 
   require('./routes/users')(app, db);
+  require('./routes/films')(app, db);
 
   app.listen(process.env.PORT || 3002, () => {
     console.log('Server started on port ' + 3002);
