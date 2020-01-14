@@ -1,14 +1,12 @@
 const authMiddleware = require('../middlewares/authMiddleware');
+const router = require('express').Router();
+const FilmModel = require('../schemas/filmSchema');
+const GenreModel = require('../schemas/genreSchema');
 
-module.exports = function (app, db) {
-  const collectionName = 'films';
-  const collection = db.collection(collectionName);
-
-  app.get(`/${collectionName}`, authMiddleware, (req, res) => {
-    collection.find().toArray((err, data) => {
-      if (err) console.log(err);
-
-      res.send(data);
+router.get(`/`, (req, res) => {
+    FilmModel.find({}).populate('genresId').then(data => {
+        res.send(data);
     });
-  });
-};
+});
+
+module.exports = router;

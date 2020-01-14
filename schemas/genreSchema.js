@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 
-const userSchema = mongoose.Schema({
-    username: String,
-    email: String,
-    password: String
+const genreSchema = mongoose.Schema({
+    name: String,
 });
 
-userSchema.set('toJSON', {
+genreSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id;
         delete returnedObject._id;
@@ -14,4 +12,4 @@ userSchema.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('genres', genreSchema);

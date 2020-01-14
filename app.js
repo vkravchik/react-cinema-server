@@ -9,6 +9,9 @@ const cfg = require('./cfg/db');
 
 const app = express();
 
+const userRoutes = require('./routes/users');
+const filmRoutes = require('./routes/films');
+
 // view engine setup
 app.use(logger('dev'));
 app.use(express.json());
@@ -18,22 +21,18 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
+app.use('/users', userRoutes);
+app.use('/films', filmRoutes);
+
+mongoose.Promise = global.Promise;
+
 mongoose.connect(cfg.url, {useNewUrlParser: true}).then(() => {
   console.log('Connected Successful');
+  app.listen(process.env.PORT || 3002, () => {
+    console.log('Server started on port ' + 3002);
+  });
 }, err => {
   throw err;
 });
-
-// MongoClient.connect(cfg.url, (err, database) => {
-//   if (err) console.log(err);
-//   const db = database.db(cfg.dbName);
-//
-//   require('./routes/users')(app, db);
-//   require('./routes/films')(app, db);
-//
-//   app.listen(process.env.PORT || 3002, () => {
-//     console.log('Server started on port ' + 3002);
-//   });
-// });
 
 module.exports = app;
