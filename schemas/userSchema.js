@@ -1,0 +1,3 @@
+const userSchema = mongoose.Schema({
+
+});
