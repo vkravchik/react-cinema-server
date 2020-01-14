@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-module.exports = function(app, db) {
+module.exports = function (app, db) {
   const collectionName = 'users';
   const collection = db.collection(collectionName);
 
@@ -23,18 +23,23 @@ module.exports = function(app, db) {
           message: 'Entered bad login/password!'
         });
       } else {
-        if (bcrypt.compareSync(password, data.password))
-          res.send(data);
+        bcrypt.compareSync(password, data.password) ?
+          res.send(data) :
+          res.status(400).send({
+            success: false,
+            message: 'Entered bad login/password!'
+          });
       }
     })
   });
 
   app.post('/register', (req, res) => {
-    let {username, password} = req.body;
+    let {username, email, password} = req.body;
     password = bcrypt.hashSync(password, 8);
 
     const user = {
       username,
+      email,
       password
     };
 
