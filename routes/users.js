@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwtKey = require('../cfg/key');
 
 module.exports = function (app, db) {
   const collectionName = 'users';
@@ -23,12 +25,20 @@ module.exports = function (app, db) {
           message: 'Entered bad login/password!'
         });
       } else {
-        bcrypt.compareSync(password, data.password) ?
-          res.send(data) :
+        if (bcrypt.compareSync(password, data.password)) {
+          const token = jwt.sign({
+            id: data._id,
+            username: data.username,
+            email: data.email,
+          }, jwtKey.tokenKey);
+
+          res.send(token);
+        } else {
           res.status(400).send({
             success: false,
             message: 'Entered bad login/password!'
           });
+        }
       }
     })
   });
